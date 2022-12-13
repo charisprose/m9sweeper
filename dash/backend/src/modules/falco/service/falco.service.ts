@@ -25,20 +25,11 @@ export class FalcoService {
         endDate?: string,
         namespace?: string,
         pod?: string,
-        image?: string
+        image?: string,
+        signature?: string
     ): Promise<{  logCount: number, list: FalcoDto[] }> {
 
-       return this.falcoDao.getFalcoLogs(clusterId, limit, page, priorities, orderBy, startDate, endDate, namespace, pod, image);
-
-    }
-
-    async getRelatedFalcoLogs(
-        clusterId: number,
-        limit = 20,
-        page = 0
-    ): Promise<{  logCount: number, list: FalcoDto[] }> {
-
-        return this.falcoDao.getRelatedFalcoLogs(clusterId, limit, page);
+       return this.falcoDao.getFalcoLogs(clusterId, limit, page, priorities, orderBy, startDate, endDate, namespace, pod, image, signature);
 
     }
 

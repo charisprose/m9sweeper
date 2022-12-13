@@ -39,24 +39,11 @@ export class FalcoController {
         @Query('namespace') namespace?: string,
         @Query('pod') pod?: string,
         @Query('image') image?: string,
+        @Query('signature') signature?: string,
     ): Promise<{ logCount: number, list: FalcoDto[]}>
     {
-        return this.falcoService.getFalcoLogs(clusterId, limit, page, priorities, orderBy, startDate, endDate, namespace, pod, image );
+        return this.falcoService.getFalcoLogs(clusterId, limit, page, priorities, orderBy, startDate, endDate, namespace, pod, image, signature );
     }
-
-    @Get()
-    @AllowedAuthorityLevels(Authority.READ_ONLY, Authority.ADMIN, Authority.SUPER_ADMIN)
-    @UseGuards(AuthGuard, AuthorityGuard)
-    async getRelatedFalcoLogs(
-        @Query('cluster-id') clusterId: number,
-        @Query('limit') limit?: number,
-        @Query('page') page?: number
-
-    ): Promise<{ logCount: number, list: FalcoDto[]}>
-    {
-        return this.falcoService.getFalcoLogs(clusterId, limit, page );
-    }
-
 
     @Get('/apiKey')
     @AllowedAuthorityLevels( Authority.SUPER_ADMIN, Authority.ADMIN )
