@@ -32,6 +32,14 @@ export class FalcoService {
     return this.httpClient.get('/api/falco', {params});
   }
 
+  getRelatedFalcoLogs(
+              clusterId: number,
+              limit?: number,
+              page?: number
+  ): Observable<IServerResponse<{logCount: number, list: IFalcoLog[]}>> {
+    const params = this.buildParams(clusterId, limit, page);
+    return this.httpClient.get('/api/falco/related', {params});
+  }
 
   downloadFalcoExport(clusterId: number):
     Observable<IServerResponse<IFalcoCsv>> {
