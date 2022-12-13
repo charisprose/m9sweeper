@@ -33,38 +33,31 @@ export class ShowJsonDataComponent implements OnInit {
   message = this.data.content.message;
   signature = this.data.content.anomalySignature;
 
+  limit = this.getLimitFromLocalStorage() ? Number(this.getLimitFromLocalStorage()) : 20;
   clusterId: number;
   logCount: number;
-  limit = this.getLimitFromLocalStorage() ? Number(this.getLimitFromLocalStorage()) : 20;
   page: number;
-  startDate: string;
-  endDate: string;
 
   ngOnInit(): void {
+
     this.header = this.data.header ? this.data.header : 'Json Data';
-
     this.route.parent.parent.params
-  .pipe(take(1))
-  .subscribe(param => {
-    this.clusterId = param.id;
-    this.getRelatedEvents();
-  });
-
+      .pipe(take(1))
+      .subscribe(param => {
+        this.clusterId = param.id;
+        this.getFalcoEvents();
+      });
   }
 
   pageEvent(pageEvent: any) {
     this.limit = pageEvent.pageSize;
     this.page = pageEvent.pageIndex;
     this.setLimitToLocalStorage(this.limit);
-    this.getRelatedEvents();
+    this.falcoService.getFalcoLogs(this.clusterId,  { limit: this.limit, page: this.page, signature: this.signature});
   }
 
-  getRelatedEvents() {
-    this.falcoService.getRelatedFalcoLogs(
-      this.clusterId,
-      this.limit,
-      this.page
-    )
+  getFalcoEvents(){
+    this.falcoService.getFalcoLogs(this.clusterId,  { limit: this.limit, page: this.page, signature: this.signature})
       .pipe(take(1))
       .subscribe(response => {
         this.dataSource = new MatTableDataSource(response.data.list);
@@ -72,15 +65,6 @@ export class ShowJsonDataComponent implements OnInit {
       }, (err) => {
         alert(err);
       });
-
-  }
-
-  getLimitFromLocalStorage(): string | null {
-    return localStorage.getItem('falco_table_limit');
-  }
-
-  setLimitToLocalStorage(limit: number) {
-    localStorage.setItem('falco_table_limit', String(limit));
   }
 
   stripDomainName(image: string): string {
@@ -94,6 +78,13 @@ export class ShowJsonDataComponent implements OnInit {
     } else if (group[2] === undefined){
       return '';
     }
+  }
+  getLimitFromLocalStorage(): string | null {
+    return localStorage.getItem('falco_table_limit');
+  }
+
+  setLimitToLocalStorage(limit: number) {
+    localStorage.setItem('falco_table_limit', String(limit));
   }
 
   onClickMore(){
