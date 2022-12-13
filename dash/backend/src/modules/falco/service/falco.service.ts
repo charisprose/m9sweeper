@@ -32,6 +32,16 @@ export class FalcoService {
 
     }
 
+    async getRelatedFalcoLogs(
+        clusterId: number,
+        limit = 20,
+        page = 0
+    ): Promise<{  logCount: number, list: FalcoDto[] }> {
+
+        return this.falcoDao.getRelatedFalcoLogs(clusterId, limit, page);
+
+    }
+
     async getFalcoCsv( clusterId: number): Promise<FalcoCsvDto> {
         const queryResponse = await this.falcoDao.getFalcoLogsForExport(clusterId);
         const result = [this.csvService.buildLine(['Date', 'Namespace', 'Pod',

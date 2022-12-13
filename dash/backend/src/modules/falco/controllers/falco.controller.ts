@@ -44,6 +44,20 @@ export class FalcoController {
         return this.falcoService.getFalcoLogs(clusterId, limit, page, priorities, orderBy, startDate, endDate, namespace, pod, image );
     }
 
+    @Get()
+    @AllowedAuthorityLevels(Authority.READ_ONLY, Authority.ADMIN, Authority.SUPER_ADMIN)
+    @UseGuards(AuthGuard, AuthorityGuard)
+    async getRelatedFalcoLogs(
+        @Query('cluster-id') clusterId: number,
+        @Query('limit') limit?: number,
+        @Query('page') page?: number
+
+    ): Promise<{ logCount: number, list: FalcoDto[]}>
+    {
+        return this.falcoService.getFalcoLogs(clusterId, limit, page );
+    }
+
+
     @Get('/apiKey')
     @AllowedAuthorityLevels( Authority.SUPER_ADMIN, Authority.ADMIN )
     @UseGuards(AuthGuard, AuthorityGuard)
