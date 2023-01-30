@@ -15,6 +15,11 @@
   width: 100%;
   white-space: nowrap;
   display: flex;
+
+}
+
+.search-scan-col {
+  justify-content: flex-end;
 }
 
 :host ::ng-deep .jsonTable table {
