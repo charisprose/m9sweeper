@@ -115,29 +115,34 @@ div {
             #constraint-templates-header {
               font-weight: bold;
               margin-left: -30px;
+              margin-right: 10px;
             }
             .add-more-btn {
               margin-left: -31px;
+              margin-right: 10px;
             }
 
             @media only screen
             and (min-device-width: 834px)
-            and (max-device-width: 1112px)
+            and (max-device-width: 1600px)
             and (-webkit-min-device-pixel-ratio: 2) {
               .add-more-btn {
                 margin-left: 16px;
+                margin-right: 10px;
               }
             }
 
             @media screen and (max-width: 987px) and (min-width: 200px){
               .add-more-btn {
                 margin-left: 0px;
+                margin-right: 10px;
               }
             }
 
-            @media screen and (max-width: 1731px) and (min-width: 993px){
+            @media screen and (max-width: 2300px) and (min-width: 993px){
               .add-more-btn {
                 //margin-left: -72px;
+                margin-right: 0px;
               }
             }
             .constraint-table-root {
