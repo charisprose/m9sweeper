@@ -42,7 +42,6 @@ export class ShowJsonDataComponent implements OnInit {
   ngOnInit(): void {
     this.header = this.data.header ? this.data.header : 'Json Data';
     this.getFalcoEvents();
-    console.log('mat dialog data content :', this.data.content);
   }
 
   pageEvent(pageEvent: any) {
@@ -57,26 +56,18 @@ export class ShowJsonDataComponent implements OnInit {
       .pipe(take(1))
       .subscribe(response => {
         const dataList = response.data.list;
-        // console.log('data list: ', dataList);
-
         this.logCount = response.data.logCount;
-        // console.log('log Count', this.logCount);
 
+        // create a new data list without the current event log
         for (let count = 0; count < this.logCount; count++){
-          // console.log ('datelist element: ', dataList[count] );
           if ( dataList[count] !== undefined) {
               if (dataList[count].id !== this.data.content.id) {
-            // if (Object.entries(dataList[count]).toString() !== Object.entries(this.data.content).toString()) {
-              // console.log ('same object!!!', dataList[count], this.data.content);
-              this.newDataList.push(dataList[count]);
-            }
+                this.newDataList.push(dataList[count]);
+              }
           }
         }
-        // include the data content
-        // this.dataSource = new MatTableDataSource(dataList);
-        // console.log ('new data source ', this.newDataList);
 
-        // not include the log display in details
+        // one less log count - without the current event log
         this.logCount = this.logCount - 1;
         this.dataSource = new MatTableDataSource(this.newDataList);
 

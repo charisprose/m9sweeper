@@ -102,7 +102,6 @@ export class ShowJsonDataMoreComponent implements OnInit {
         this.raw = response.data.raw;
         this.extractProperty = this.extractProperties(this.raw);
         this.eventData = response.data;
-        // console.log('event data', this.eventData);
       }, (err) => {
         alert(err);
       });
@@ -114,14 +113,16 @@ export class ShowJsonDataMoreComponent implements OnInit {
       .subscribe(response => {
         const dataList = response.data.list;
         this.logCount = response.data.logCount;
+
+        // create a new data list without the current event log
         for (let count = 0; count < this.logCount; count++) {
           if (dataList[count] !== undefined) {
             if (dataList[count].id !== this.eventData.id) {
               this.newDataList.push(dataList[count]);
-              // console.log('add to newdatalist: ', dataList[count]);
             }
           }
         }
+        // one less log count - without the current event log
         this.logCount = this.logCount - 1;
         this.dataSource = new MatTableDataSource(this.newDataList);
         this.newDataList = [];
