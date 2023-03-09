@@ -46,6 +46,8 @@ export class ShowJsonDataMoreComponent implements OnInit {
   page: number;
 
   falcoCountData: IFalcoCount[];
+  newDataList: IFalcoLog[] = [];
+  eventData: IFalcoLog;
 
 
   barChartAttributes = {
@@ -99,6 +101,8 @@ export class ShowJsonDataMoreComponent implements OnInit {
         this.message = response.data.message;
         this.raw = response.data.raw;
         this.extractProperty = this.extractProperties(this.raw);
+        this.eventData = response.data;
+        // console.log('event data', this.eventData);
       }, (err) => {
         alert(err);
       });
@@ -108,8 +112,19 @@ export class ShowJsonDataMoreComponent implements OnInit {
     this.falcoService.getFalcoLogs(this.clusterId,  { limit: this.limit, page: this.page, signature: this.signature})
       .pipe(take(1))
       .subscribe(response => {
-        this.dataSource = new MatTableDataSource(response.data.list);
+        const dataList = response.data.list;
         this.logCount = response.data.logCount;
+        for (let count = 0; count < this.logCount; count++) {
+          if (dataList[count] !== undefined) {
+            if (dataList[count].id !== this.eventData.id) {
+              this.newDataList.push(dataList[count]);
+              // console.log('add to newdatalist: ', dataList[count]);
+            }
+          }
+        }
+        this.logCount = this.logCount - 1;
+        this.dataSource = new MatTableDataSource(this.newDataList);
+        this.newDataList = [];
       }, (err) => {
         alert(err);
       });
@@ -199,5 +214,6 @@ export class ShowJsonDataMoreComponent implements OnInit {
   displayEventDetails(event: IFalcoLog) {
     this.eventId = event.id;
     this.getEventById();
+    this.getRelatedEvents();
   }
 }

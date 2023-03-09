@@ -37,10 +37,12 @@ export class ShowJsonDataComponent implements OnInit {
   limit = this.getLimitFromLocalStorage() ? Number(this.getLimitFromLocalStorage()) : 20;
   logCount: number;
   page: number;
+  newDataList: IFalcoLog[] = [];
 
   ngOnInit(): void {
     this.header = this.data.header ? this.data.header : 'Json Data';
     this.getFalcoEvents();
+    console.log('mat dialog data content :', this.data.content);
   }
 
   pageEvent(pageEvent: any) {
@@ -54,8 +56,30 @@ export class ShowJsonDataComponent implements OnInit {
     this.falcoService.getFalcoLogs(this.clusterId,  { limit: this.limit, page: this.page, signature: this.signature})
       .pipe(take(1))
       .subscribe(response => {
-        this.dataSource = new MatTableDataSource(response.data.list);
+        const dataList = response.data.list;
+        // console.log('data list: ', dataList);
+
         this.logCount = response.data.logCount;
+        // console.log('log Count', this.logCount);
+
+        for (let count = 0; count < this.logCount; count++){
+          // console.log ('datelist element: ', dataList[count] );
+          if ( dataList[count] !== undefined) {
+              if (dataList[count].id !== this.data.content.id) {
+            // if (Object.entries(dataList[count]).toString() !== Object.entries(this.data.content).toString()) {
+              // console.log ('same object!!!', dataList[count], this.data.content);
+              this.newDataList.push(dataList[count]);
+            }
+          }
+        }
+        // include the data content
+        // this.dataSource = new MatTableDataSource(dataList);
+        // console.log ('new data source ', this.newDataList);
+
+        // not include the log display in details
+        this.logCount = this.logCount - 1;
+        this.dataSource = new MatTableDataSource(this.newDataList);
+
       }, (err) => {
         alert(err);
       });
